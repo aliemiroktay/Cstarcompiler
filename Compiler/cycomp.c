@@ -13,10 +13,10 @@ typedef struct {
 // Keyword mappings for C* to C translation
 KeywordMapping mappings[] = {
     //{"@xhport ","#include "},
-    {"/stdio:", "#include <stdio.h>\n"},
-    {"/stdbool:", "#include <stdbool.h>\n"},
-    {"/unistd:", "#include <unistd.h>\n"},
-    {"/termios:", "#include <termios.h>\n"},
+    {"/stdio:", "#" + "include " +"<std" + "io.h>\n"},
+    {"/stdbool:", "#" + "include " +"<std" + "bool.h>\n"},
+    {"/unistd:", "#" + "include " +"<uni" + "std.h>\n"},
+    {"/termios:", "#" + "include " +"<term" + "ios.h>\n"},
     {"2reviewed", "_Bool"},
     {"mreviewed", "float"},
     {"lreviewed", "long"},
