@@ -12,13 +12,20 @@ typedef struct {
 
 // Keyword mappings for C* to C translation
 KeywordMapping mappings[] = {
-    {"2reviewed", "bool"},
+    //{"@xhport ","#include "},
+    {"/stdio:", "#include <stdio.h>\n"},
+    {"/stdbool:", "#include <stdbool.h>\n"},
+    {"/unistd:", "#include <unistd.h>\n"},
+    {"/termios:", "#include <termios.h>\n"},
+    {"2reviewed", "_Bool"},
     {"mreviewed", "float"},
     {"lreviewed", "long"},
-    {"oprint(", "printf("},
+    {"oprint", "printf"},
     {"build", "struct"},
     {"nonreviewed", "void"},
     {"reviewed", "int"},
+    {">>",")"},
+    {"<<","("},
 };
 
 // Function to translate C* keywords to C equivalents
@@ -30,9 +37,6 @@ void translate_cstar_to_c(const char* input, const char* output) {
         printf("Error opening files.\n");
         exit(1);
     }
-
-    // Write necessary headers to the output C file
-    fprintf(outfile, "#include <stdio.h>\n#include <stdbool.h>\n\n");
 
     char line[1024];
     while (fgets(line, sizeof(line), infile)) {
