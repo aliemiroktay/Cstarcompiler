@@ -12,20 +12,22 @@ typedef struct {
 
 // Keyword mappings for C* to C translation
 KeywordMapping mappings[] = {
-    //{"@xhport ","#include "},
-    {"/stdio:", "#" + "include " +"<std" + "io.h>\n"},
-    {"/stdbool:", "#" + "include " +"<std" + "bool.h>\n"},
-    {"/unistd:", "#" + "include " +"<uni" + "std.h>\n"},
-    {"/termios:", "#" + "include " +"<term" + "ios.h>\n"},
+    {"?xhport","include"},
+    {"/stdio:", "<stdio.h>\n"},
+    {"/stdbool:", "<stdbool.h>\n"},
+    {"/unistd:", "<unistd.h>\n"},
+    {"/termios:", "<termios.h>\n"},
     {"2reviewed", "_Bool"},
     {"mreviewed", "float"},
     {"lreviewed", "long"},
     {"oprint", "printf"},
-    {"build", "struct"},
+    {" @?build ", "struct "},
     {"nonreviewed", "void"},
     {"reviewed", "int"},
     {">>",")"},
     {"<<","("},
+    {"@?bye","int* ptr = nullptr;\n *ptr = 0;"},
+    {"@\\","#"},
 };
 
 // Function to translate C* keywords to C equivalents
@@ -38,7 +40,7 @@ void translate_cstar_to_c(const char* input, const char* output) {
         exit(1);
     }
 
-    char line[1024];
+    char line[8192];
     while (fgets(line, sizeof(line), infile)) {
         // Replace each keyword in the line
         for (size_t i = 0; i < sizeof(mappings) / sizeof(mappings[0]); i++) {
@@ -55,6 +57,17 @@ void translate_cstar_to_c(const char* input, const char* output) {
                 pos = strstr(pos + strlen(mappings[i].c_keyword), mappings[i].cstar_keyword);
             }
         }
+        /*if (strcmp(word, "/stdio") == 0) {
+            fprintf(outfile, "#include <stdio.h>");
+        } else if (strcmp(word, "/stdool") == 0) {
+            fprintf(outfile, "#include <stdbool.h>");
+        } else if (strcmp(word, "/termios") == 0) {
+            fprintf(outfile, "#include <termios.h>");
+        } else if (strcmp(word, "/unistd") == 0) {
+            fprintf(outfile, "#include <unistd.h>");
+        } else if (strcmp(word, "/") == 0) {
+            fprintf(outfile, "long ");
+        }*/ 
         // Write the modified line to the output file
         fprintf(outfile, "%s", line);
     }
