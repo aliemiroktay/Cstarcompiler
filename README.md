@@ -3,26 +3,34 @@
 A brand new programming Language: ?C, and its compiler. Now, it is overly simple, and will be getting updates.
 Generally, made for improving myself in c. These are the only available codes:
 (note: Mostly like c, but has different keywords, and more useful loops will be added.)
-# Keywords:\
+# Keywords:
 noreviewed; void in c.\
 2rewieved; boolean.\
 reviewed; int.\
 lreviewed; long.\
 build; struct.\
 mreviewed; float.\
-# functions:\
+# functions:
 oprint(same as c here); print.\
-some program:\
-@\ ?xhport /stdio:
+# some program:
 
-reviewed number = 1745;
 
-nonreviewed try<<>>{
-oprint<<"hello %d", number>₺;
-}\
+@\?xhport /stdio:
+@\?xhport /stdbool:
 
-reviewed main<<>>{\
-lreviewed test = 783844664;
-oprint<<"%ld\n", test>>;
-return 0;
+nonreviewed test<<>>{
+    oprint<<"hello!">>;
 }
+
+reviewed main<<>> {
+    reviewed num = 42;
+    lreviewed bigNum = 1234567890;
+    2reviewed isTrue = 1;
+    mreviewed pi = 3.14;
+    oprint<<"Number: %d\n", num>>;
+    oprint<<"Big Number: %ld\n", bigNum>>;
+    oprint<<"Boolean: %d\n", isTrue>>;
+    oprint<<"Pi: %.2f\n", pi>>;
+    test<<>>;
+}
+
