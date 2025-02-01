@@ -24,10 +24,11 @@ KeywordMapping mappings[] = {
     {" @?build ", "struct "},
     {"nonreviewed", "void"},
     {"reviewed", "int"},
-    {">>",")"},
-    {"<<","("},
+    {"|>",")"},
+    {"<|","("},
     {"@?bye","int* ptr = nullptr;\n *ptr = 0;"},
     {"@\\","#"},
+    {"<|>","()"},
 };
 
 // Function to translate C* keywords to C equivalents
