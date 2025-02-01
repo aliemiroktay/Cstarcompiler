@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_FILENAME 256
+
+_Bool instr = false;
 
 // Structure for keyword mappings
 typedef struct {
@@ -12,11 +15,8 @@ typedef struct {
 
 // Keyword mappings for C* to C translation
 KeywordMapping mappings[] = {
-    {"?xhport","include"},
-    {"/stdio:", "<stdio.h>\n"},
-    {"/stdbool:", "<stdbool.h>\n"},
-    {"/unistd:", "<unistd.h>\n"},
-    {"/termios:", "<termios.h>\n"},
+    {"?xhport","include <"},
+    {":\n", ".h>\n"},
     {"2reviewed", "_Bool"},
     {"mreviewed", "float"},
     {"lreviewed", "long"},
@@ -42,32 +42,32 @@ void translate_cstar_to_c(const char* input, const char* output) {
 
     char line[8192];
     while (fgets(line, sizeof(line), infile)) {
-        // Replace each keyword in the line
-        for (size_t i = 0; i < sizeof(mappings) / sizeof(mappings[0]); i++) {
-            char* pos = strstr(line, mappings[i].cstar_keyword);
-            while (pos) {
-                // Replace the keyword with its C equivalent
-                memcpy(pos, mappings[i].c_keyword, strlen(mappings[i].c_keyword));
-                // Shift the rest of the line to the left if the replacement is shorter
-                if (strlen(mappings[i].cstar_keyword) > strlen(mappings[i].c_keyword)) {
-                    memmove(pos + strlen(mappings[i].c_keyword),
-                            pos + strlen(mappings[i].cstar_keyword),
-                            strlen(pos + strlen(mappings[i].cstar_keyword)) + 1);
+        // To understand if in a string
+        for (char* p = line; *p; p++) {
+            if (*p == '"' && (p == line || *(p - 1) != '\\')) {
+                instr = !instr; // Toggle the in_string flag
+            }
+
+            // Check if in a string, to prevent printing struct instead of @?build, or for others.
+            if (!instr) {
+                // Replace each keyword in the line
+                for (size_t i = 0; i < sizeof(mappings) / sizeof(mappings[0]); i++) {
+                    char* pos = strstr(p, mappings[i].cstar_keyword);
+                    while (pos && !instr) {
+                        // Replace the keyword with its C equivalent
+                        memcpy(pos, mappings[i].c_keyword, strlen(mappings[i].c_keyword));
+                        // Shift the rest of the line to the left if the replacement is shorter
+                        if (strlen(mappings[i].cstar_keyword) > strlen(mappings[i].c_keyword)) {
+                            memmove(pos + strlen(mappings[i].c_keyword),
+                                    pos + strlen(mappings[i].cstar_keyword),
+                                    strlen(pos + strlen(mappings[i].cstar_keyword)) + 1);
+                        }
+                        pos = strstr(pos + strlen(mappings[i].c_keyword), mappings[i].cstar_keyword);
+                    }
                 }
-                pos = strstr(pos + strlen(mappings[i].c_keyword), mappings[i].cstar_keyword);
             }
         }
-        /*if (strcmp(word, "/stdio") == 0) {
-            fprintf(outfile, "#include <stdio.h>");
-        } else if (strcmp(word, "/stdool") == 0) {
-            fprintf(outfile, "#include <stdbool.h>");
-        } else if (strcmp(word, "/termios") == 0) {
-            fprintf(outfile, "#include <termios.h>");
-        } else if (strcmp(word, "/unistd") == 0) {
-            fprintf(outfile, "#include <unistd.h>");
-        } else if (strcmp(word, "/") == 0) {
-            fprintf(outfile, "long ");
-        }*/ 
+
         // Write the modified line to the output file
         fprintf(outfile, "%s", line);
     }
