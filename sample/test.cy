@@ -1,3 +1,6 @@
+// DEPRECATED SAMPLE CODE. IT WILL NOT RUN.
+
+
 @\?xhport /stdio:
 @\?xhport /stdbool:
 
